@@ -2,6 +2,7 @@ Project 11,12 - Python Bank and ATM
 CSCI 101 Fall 2019
 By Harry Pinkerton and Justin Park
 Required to run: python 3.7
+*Must run bankmanager.py and establish a server connection before atm.py will run*
 
 
 ===bankmanager.py===
