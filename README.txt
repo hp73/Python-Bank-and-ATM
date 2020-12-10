@@ -3,9 +3,9 @@ CSCI 101 Fall 2019
 By Harry Pinkerton and Justin Park
 Required to run: python 3.7
 
-===bankmanager.py===
-When run, displays a bankmanager GUI where the user is able to access all members of the bank
 
+===bankmanager.py===
+When run, displays a bankmanager GUI where the user is able to access all members of the bank. By default, data for the bank is stored in bank.dat. 
 
 --Variables--
 bank: Bank object that the ATM class accesses from bank.py
@@ -21,6 +21,7 @@ statusLabel: where "status" is displayed on the GUI
 nameField: where the specified user's name is displayed
 pinField: where the specified pin is displayed
 balanceField: where the specified blanace is displayed
+hostField: where the host ip for the bank is displayed
 statusField: where the specified status is displayed
 newButton: the button that is linked with the newAccount method
 updateButton: the button that is linked with the updateAccount method
@@ -29,6 +30,7 @@ interestButton: the button that is linked with the computeInterest method
 previousButton: the button that is linked with the previousAccount method
 nextButton: the button that is linked with the nextAccount method
 saveButton: the button that is linked with the saveBank method
+serverButton: the button that is linked with the startServer method
 findAccount: the button that is linked with the findAccount method
 keys: list of keys from a given bank object
 
@@ -43,10 +45,13 @@ previousAccount(): moves the position of the queue back one position
 nextAccount(): moves the position of the queue forward one position
 saveBank(): Saves the current bank information
 findAccount(): finds a user's account in the queue given a name and pin number 
+updateStatus(): Displays message in status field.
+startServer(): Starts up the bank server at default localhost and port 50000
 
 
 ===atm.py===
-When run, displays an atm GUI where the user is able to access the bank given a name and pin number. 
+When run, displays an atm GUI where the user is able to access the bank given a name and pin number. BankManager must be running and the server connection
+established before this program may run.
 
 --Variables--
 bank: Bank object that the ATM class accesses from bank.py
@@ -76,6 +81,7 @@ logout(): clears all fields and enables a new login from a new user
 getBalance(): retrieves the balance from a unqiue account
 deposit(): inserts a specified amount into a unique account 
 withdraw(): withdraws a specified amount from a unique account given the account has as much as or more than the amount specified
+
 
 ===bank.py===
 Returns all of the SavingsAccounts from a specified file to the command line  
@@ -113,6 +119,40 @@ getKeys(): Returns a sorted list of keys
 save(): Saves picked accounts to a file. The parameter allows the user to change file names
 
 
+===atmClient.py===
+Represents the client for a bank ATM.  Behaves like a Bank with the get method and an account with the getBalance, deposit, and withdraw
+methods. By default, runs on localhost, but has the functionality to work across different ip addresses and ports.
 
+--Variables--
+address: host and port number
+server: establishes a server for the atm to run on given a host ip and port number
+message: message to be decoded from the GUI to the server
+
+--Methods--
+getBalance(): returns the balance of a specified account
+deposit(): deposits amount and returns None if successful, or an error message if not
+withdraw(): Withdraws amount and returns None if successful, or an error message if not.
+get(): returns the client's account if it exists, or None if not
+
+
+===bankserver.py===
+Represents the client for a bank ATM.  Behaves like a Bank with the get method and an account with the getBalance, deposit, and withdraw
+methods. By default, runs on localhost, but has the functionality to work across different ip addresses and ports.
+
+--Variables--
+client: current bank manager client
+account: a unique name and pin combination that is associated with an individuals' balance
+myView: text based updates based on the connection of the server
+message: message to be decoded from the GUI to the server
+bank: specified bank where SavingsAccount data will be pulled
+
+--Methods--
+run(): opens the server's socket, waits for connections from clients, and serves them.
+reply(): parses the message into a commmand and its arguments and dispatches them to the appropriate method.
+deposit(): deposits amount and returns success or error message
+withdraw(): withdraws amount and returns success or error message
+getBalance(): returns the balance as a string.
+logout(): clears the current account from being displayed on the GUI
+login(): attempts to login and returns success or failure
 
 
