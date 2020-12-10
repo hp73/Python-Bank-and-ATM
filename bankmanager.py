@@ -1,14 +1,16 @@
 """
 Author: Justin Park and Harry Pinkerton
 File: bankmanager.py
-Project 11
+Project 11,12
 
 This module defines the BanManager class, which provides a window
 for bank managers to maintain accounts.
 """
 
 from breezypythongui import EasyFrame
-from bank import SavingsAccount, Bank
+from bank import SavingsAccount, Bank, createBank
+from bankserver import BankServer
+import socket
 
 class BankManager(EasyFrame):
     """Represents an ATM window."""
@@ -46,6 +48,9 @@ class BankManager(EasyFrame):
                                                value = 0.0)
         self.statusField = self.addTextField(row = 3, column = 1,
                                              text = "")
+        self.hostField = self.addTextField(row = 5, column = 1,
+                                             text = "127.0.0.1")
+                                             #socket.gethostbyname(socket.gethostname())
         self.newButton = self.addButton(row = 0, column = 2,
                                         text = "New account",
                                         command = self.newAccount)
@@ -67,6 +72,9 @@ class BankManager(EasyFrame):
         self.saveButton = self.addButton(row = 4, column = 2,
                                          text = "Save to file",
                                          command = self.saveBank)
+        self.serverButton = self.addButton(row = 5, column = 2,
+                                           text = "Start server",
+                                          command = self.startServer)
         self.findaccount= self.addButton(row = 4, column =3,
                                          text = "Find account",
                                          command = self.findAccount)
@@ -166,14 +174,26 @@ class BankManager(EasyFrame):
         else:
             self.statusField.setText("This account doesn't exist.")
             
-        
+    def updateStatus(self, message):
+        """Displays message in status field."""
+        self.statusField.setText(message)
 
+    def startServer(self):
+        """Starts up the bank server."""
+        self.server = BankServer(self.hostField.getText(),
+                                 50000, self.bank, self)
+        self.server.start()
+            
+    
          
 def main(fileName = "bank.dat"):
     """Creates the bank with the optional file name,
     wraps the window around it, and opens the window.
     Saves the bank when the window closes."""
-    bank = Bank(fileName)
+    if not fileName:
+        bank = createBank(5)
+    else:
+        bank = Bank(fileName)
     print(bank)
     manager = BankManager(bank)
     manager.mainloop()

@@ -1,7 +1,7 @@
 """
 Author: Justin Park and Harry Pinkerton
 File: bank.py
-Project 11
+Project 11,12
 
 This module defines the SavingsAccount and Bank classes.
 """

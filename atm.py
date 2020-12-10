@@ -1,7 +1,7 @@
 """
 Author: Justin Park and Harry Pinkerton
 File: atm.py
-Project 11
+Project 11,12
 
 This module defines the ATM class, which provides a window
 for bank customers to perform deposits, withdrawals, and check
@@ -10,6 +10,8 @@ balances.
 
 from breezypythongui import EasyFrame
 from bank import SavingsAccount, Bank, createBank
+from atmclient import ATMClient
+import sys
 
 class ATM(EasyFrame):
     """Represents an ATM window."""
@@ -125,11 +127,11 @@ def main(fileName = "bank.dat"):
     """Creates the bank with the optional file name,
     wraps the window around it, and opens the window.
     Saves the bank when the window closes."""
-    if not fileName:
-        bank = createBank(5)
+    if len(sys.argv) == 2:
+        host = sys.argv[1]
     else:
-        bank = Bank(fileName)
-    print(bank)
+        host = 'localhost'
+    bank = ATMClient(host, 50000)
     atm = ATM(bank)
     atm.mainloop()
 
